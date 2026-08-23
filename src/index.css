@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  --color-eco-50: #f2fcf5;
+  --color-eco-100: #e1f8e8;
+  --color-eco-200: #c4eed3;
+  --color-eco-300: #96dfb1;
+  --color-eco-400: #5fc686;
+  --color-eco-500: #39a966;
+  --color-eco-600: #27864e;
+  --color-eco-700: #226b40;
+  --color-eco-800: #1e5535;
+  --color-eco-900: #19462d;
+  --color-eco-950: #0e271a;
+  
+  --color-dark-bg: #090e11;
+  --color-dark-surface: rgba(20, 30, 25, 0.6);
+  --color-dark-border: rgba(95, 198, 134, 0.2);
+  --color-neon-accent: #39ff14;
+
+  --font-sans: 'Inter', 'Outfit', system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-gray-100 font-sans antialiased selection:bg-eco-500 selection:text-white;
+  }
+}
+
+@layer utilities {
+  .hover-lift {
+    @apply transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-eco-500/20;
+  }
+  
+  .glass-panel {
+    @apply bg-dark-surface backdrop-blur-xl border border-dark-border shadow-lg;
+  }
+}
