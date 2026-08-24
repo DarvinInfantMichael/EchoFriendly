@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ProductList from './components/ProductList';
 import CartDrawer from './components/CartDrawer';
-import ProductDetailsModal from './components/ProductDetailsModal';
-import { products } from './data/products';
+import HomePage from './pages/HomePage';
+import ProductDetailsPage from './pages/ProductDetailsPage';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleAddToCart = (product) => {
     setCartItems((prevItems) => {
@@ -48,13 +46,11 @@ function App() {
         onOpenCart={() => setIsCartOpen(true)} 
       />
       
-      <main className="flex-1 w-full">
-        <Hero />
-        <ProductList 
-          products={products} 
-          onAddToCart={handleAddToCart} 
-          onProductSelect={setSelectedProduct}
-        />
+      <main className="flex-1 w-full flex flex-col">
+        <Routes>
+          <Route path="/" element={<HomePage onAddToCart={handleAddToCart} />} />
+          <Route path="/product/:id" element={<ProductDetailsPage onAddToCart={handleAddToCart} />} />
+        </Routes>
       </main>
 
       <CartDrawer 
@@ -63,13 +59,6 @@ function App() {
         cartItems={cartItems}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
-      />
-
-      <ProductDetailsModal
-        isOpen={!!selectedProduct}
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-        onAddToCart={handleAddToCart}
       />
 
       <footer className="bg-black/40 border-t border-white/5 py-12 w-full text-center">

@@ -1,7 +1,7 @@
 import React from 'react';
 import ProductCard from './ProductCard';
 
-export default function ProductList({ products, onAddToCart, onProductSelect }) {
+export default function ProductList({ products, onAddToCart }) {
   return (
     <section id="shop" className="py-24 bg-dark-bg relative">
       {/* Decorative background glow */}
@@ -23,7 +23,6 @@ export default function ProductList({ products, onAddToCart, onProductSelect }) 
               key={product.id} 
               product={product} 
               onAddToCart={onAddToCart} 
-              onProductSelect={onProductSelect}
             />
           ))}
         </div>

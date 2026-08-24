@@ -1,11 +1,14 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-export default function ProductCard({ product, onAddToCart, onProductSelect }) {
+export default function ProductCard({ product, onAddToCart }) {
+  const navigate = useNavigate();
+
   return (
     <div 
       className="group relative rounded-2xl transition-all duration-300 overflow-hidden flex flex-col hover-lift glass-panel cursor-pointer"
-      onClick={() => onProductSelect && onProductSelect(product)}
+      onClick={() => navigate(`/product/${product.id}`)}
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-900">
         <img 
