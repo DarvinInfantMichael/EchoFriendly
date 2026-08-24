@@ -1,9 +1,12 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
 
-export default function ProductCard({ product, onAddToCart }) {
+export default function ProductCard({ product, onAddToCart, onProductSelect }) {
   return (
-    <div className="group relative rounded-2xl transition-all duration-300 overflow-hidden flex flex-col hover-lift glass-panel">
+    <div 
+      className="group relative rounded-2xl transition-all duration-300 overflow-hidden flex flex-col hover-lift glass-panel cursor-pointer"
+      onClick={() => onProductSelect && onProductSelect(product)}
+    >
       <div className="relative aspect-[4/3] overflow-hidden bg-gray-900">
         <img 
           src={product.image} 
@@ -20,7 +23,7 @@ export default function ProductCard({ product, onAddToCart }) {
       
       <div className="p-6 flex flex-col flex-grow text-left relative z-10 bg-dark-bg/40 backdrop-blur-sm">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-gray-100 leading-tight">
+          <h3 className="text-lg font-semibold text-gray-100 leading-tight group-hover:text-neon-accent transition-colors">
             {product.name}
           </h3>
           <span className="text-lg font-bold text-neon-accent ml-4 whitespace-nowrap">
@@ -33,7 +36,10 @@ export default function ProductCard({ product, onAddToCart }) {
         </p>
         
         <button 
-          onClick={() => onAddToCart(product)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddToCart(product);
+          }}
           className="mt-auto w-full flex items-center justify-center gap-2 bg-white/5 border border-white/10 text-white hover:bg-neon-accent hover:text-dark-bg hover:border-transparent px-4 py-2.5 rounded-xl font-medium transition-all duration-200 active:scale-[0.98]"
         >
           <Plus className="w-4 h-4" />

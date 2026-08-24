@@ -3,11 +3,13 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProductList from './components/ProductList';
 import CartDrawer from './components/CartDrawer';
+import ProductDetailsModal from './components/ProductDetailsModal';
 import { products } from './data/products';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleAddToCart = (product) => {
     setCartItems((prevItems) => {
@@ -51,6 +53,7 @@ function App() {
         <ProductList 
           products={products} 
           onAddToCart={handleAddToCart} 
+          onProductSelect={setSelectedProduct}
         />
       </main>
 
@@ -60,6 +63,13 @@ function App() {
         cartItems={cartItems}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
+      />
+
+      <ProductDetailsModal
+        isOpen={!!selectedProduct}
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onAddToCart={handleAddToCart}
       />
 
       <footer className="bg-black/40 border-t border-white/5 py-12 w-full text-center">
