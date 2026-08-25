@@ -30,7 +30,7 @@ export default function ProductCard({ product, onAddToCart }) {
             {product.name}
           </h3>
           <span className="text-lg font-bold text-neon-accent ml-4 whitespace-nowrap">
-            ${product.price.toFixed(2)}
+            ₹{product.price.toFixed(2)}
           </span>
         </div>
         

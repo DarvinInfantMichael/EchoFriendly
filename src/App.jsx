@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import CartDrawer from './components/CartDrawer';
 import HomePage from './pages/HomePage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import AboutPage from './pages/AboutPage';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
+    if (!user) {
+      navigate('/register');
+      return;
+    }
+
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
       if (existingItem) {
@@ -50,6 +61,9 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage onAddToCart={handleAddToCart} />} />
           <Route path="/product/:id" element={<ProductDetailsPage onAddToCart={handleAddToCart} />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>
 

@@ -64,7 +64,7 @@ export default function ProductDetailsPage({ onAddToCart }) {
               {product.name}
             </h1>
             <span className="text-3xl font-bold text-gray-300 mb-8">
-              ${product.price.toFixed(2)}
+              ₹{product.price.toFixed(2)}
             </span>
             
             <p className="text-lg text-gray-400 mb-10 leading-relaxed">
@@ -150,7 +150,7 @@ export default function ProductDetailsPage({ onAddToCart }) {
                 onClick={() => onAddToCart(product)}
                 className="w-full bg-neon-accent text-dark-bg px-8 py-4 rounded-2xl font-bold text-lg hover:bg-neon-accent/90 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(157,255,0,0.3)] hover:shadow-[0_0_30px_rgba(157,255,0,0.5)] flex justify-center items-center gap-3"
               >
-                Add to Cart - ${product.price.toFixed(2)}
+                Add to Cart - ₹{product.price.toFixed(2)}
               </button>
             </div>
           </div>
