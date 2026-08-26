@@ -21,12 +21,29 @@ export default function Navbar({ cartItemCount, onOpenCart }) {
             <Link to="/about" className="text-gray-300 hover:text-neon-accent font-medium transition-colors">About Us</Link>
           </div>
 
-          <div className="flex items-center space-x-4">
-            {user ? (
-              <div className="hidden sm:flex items-center gap-4">
-                <span className="text-sm font-medium text-eco-400">
-                  Welcome, {user.name}
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <button 
+              onClick={onOpenCart}
+              className="relative p-2 text-gray-300 hover:text-neon-accent rounded-full transition-all hover:bg-white/5"
+              aria-label="Open cart"
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {cartItemCount > 0 && (
+                <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-5 w-5 items-center justify-center rounded-full bg-neon-accent text-[10px] font-bold text-dark-bg shadow-sm ring-2 ring-dark-bg">
+                  {cartItemCount}
                 </span>
+              )}
+            </button>
+
+            {user ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/profile"
+                  className="p-2 text-gray-300 hover:text-eco-400 rounded-full transition-all hover:bg-white/5"
+                  title="Profile"
+                >
+                  <UserIcon className="h-5 w-5" />
+                </Link>
                 <button
                   onClick={logout}
                   className="p-2 text-gray-300 hover:text-red-400 rounded-full transition-all hover:bg-red-500/10"
@@ -44,19 +61,6 @@ export default function Navbar({ cartItemCount, onOpenCart }) {
                 Sign In
               </Link>
             )}
-
-            <button 
-              onClick={onOpenCart}
-              className="relative p-2 text-gray-300 hover:text-neon-accent rounded-full transition-all hover:bg-white/5"
-              aria-label="Open cart"
-            >
-              <ShoppingCart className="h-6 w-6" />
-              {cartItemCount > 0 && (
-                <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-5 w-5 items-center justify-center rounded-full bg-neon-accent text-[10px] font-bold text-dark-bg shadow-sm ring-2 ring-dark-bg">
-                  {cartItemCount}
-                </span>
-              )}
-            </button>
           </div>
         </div>
       </div>

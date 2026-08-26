@@ -8,6 +8,7 @@ import ProductDetailsPage from './pages/ProductDetailsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AboutPage from './pages/AboutPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -48,6 +49,10 @@ function App() {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
+  const handleClearCart = () => {
+    setCartItems([]);
+  };
+
   const totalCartItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -64,6 +69,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </main>
 
@@ -73,6 +79,7 @@ function App() {
         cartItems={cartItems}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
+        onClearCart={handleClearCart}
       />
 
       <footer className="bg-black/40 border-t border-white/5 py-12 w-full text-center">

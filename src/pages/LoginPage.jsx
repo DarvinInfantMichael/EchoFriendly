@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, LogIn, ArrowRight } from 'lucide-react';
+import { Mail, Lock, LogIn, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
@@ -21,7 +21,7 @@ export default function LoginPage() {
 
     const success = login(email, password);
     if (success) {
-      navigate('/');
+      navigate('/profile');
     } else {
       setError('Invalid email or password');
     }
@@ -35,7 +35,14 @@ export default function LoginPage() {
 
       <div className="max-w-md w-full z-10">
         <div className="glass-panel p-8 md:p-10 rounded-3xl">
-          <div className="text-center mb-10">
+          <div className="text-center mb-10 relative">
+            <button 
+              onClick={() => navigate(-1)}
+              className="absolute left-0 top-0 text-gray-400 hover:text-white p-1 transition-colors group"
+              title="Go Back"
+            >
+              <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+            </button>
             <h2 className="text-3xl font-bold tracking-tight text-white mb-2">Welcome Back</h2>
             <p className="text-gray-400">Sign in to your Earthly account</p>
           </div>

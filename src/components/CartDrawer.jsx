@@ -6,7 +6,8 @@ export default function CartDrawer({
   onClose, 
   cartItems, 
   onUpdateQuantity, 
-  onRemoveItem 
+  onRemoveItem,
+  onClearCart
 }) {
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
 
@@ -28,12 +29,24 @@ export default function CartDrawer({
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
           <h2 className="text-xl font-bold text-white">Your Cart</h2>
-          <button 
-            onClick={onClose}
-            className="p-2 -mr-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-4">
+            {cartItems.length > 0 && (
+              <button 
+                onClick={onClearCart}
+                className="text-sm font-medium text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
+                title="Clear Cart"
+              >
+                <Trash2 className="w-4 h-4" />
+                Clear
+              </button>
+            )}
+            <button 
+              onClick={onClose}
+              className="p-2 -mr-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
