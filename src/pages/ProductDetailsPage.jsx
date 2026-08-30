@@ -1,13 +1,67 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Leaf, Droplet, Wind, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Leaf, Droplet, Wind, ArrowRight, ArrowLeft, Star } from 'lucide-react';
 import { products } from '../data/products';
+import { useAuth } from '../context/AuthContext';
 
 export default function ProductDetailsPage({ onAddToCart }) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   
   const product = products.find((p) => p.id === parseInt(id));
+
+  const defaultReviews = [
+    {
+      id: 'mock-1',
+      userName: 'Sarah Jenkins',
+      avatar: 'https://i.pravatar.cc/150?u=sarah',
+      text: 'Absolutely love this! It feels so much better knowing I am reducing my plastic waste. Highly recommend.',
+      rating: 5,
+      date: '10/12/2023'
+    },
+    {
+      id: 'mock-2',
+      userName: 'Michael T.',
+      avatar: 'https://i.pravatar.cc/150?u=michael',
+      text: 'Great quality, but took a few days to get used to it. Still, a solid purchase for the environment.',
+      rating: 4,
+      date: '11/05/2023'
+    }
+  ];
+
+  const [reviews, setReviews] = useState(() => {
+    const saved = localStorage.getItem(`reviews_${id}`);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return parsed.length > 0 ? parsed : defaultReviews;
+    }
+    return defaultReviews;
+  });
+  const [newReview, setNewReview] = useState('');
+  const [rating, setRating] = useState(5);
+
+  useEffect(() => {
+    localStorage.setItem(`reviews_${id}`, JSON.stringify(reviews));
+  }, [reviews, id]);
+
+  const handleSubmitReview = (e) => {
+    e.preventDefault();
+    if (!newReview.trim()) return;
+    
+    const review = {
+      id: Date.now(),
+      userName: user?.name || 'Anonymous',
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Anonymous')}&background=random`,
+      text: newReview,
+      rating: rating,
+      date: new Date().toLocaleDateString()
+    };
+    
+    setReviews([...reviews, review]);
+    setNewReview('');
+    setRating(5);
+  };
 
   // Scroll to top on mount
   useEffect(() => {
@@ -152,6 +206,109 @@ export default function ProductDetailsPage({ onAddToCart }) {
               >
                 Add to Cart - ₹{product.price.toFixed(2)}
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-16 pt-12 border-t border-white/10">
+          <h3 className="text-2xl font-bold text-white mb-8">Customer Reviews</h3>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Reviews List */}
+            <div>
+              {reviews.length === 0 ? (
+                <p className="text-gray-400">No reviews yet. Be the first to review this product!</p>
+              ) : (
+                <div className="space-y-6">
+                  {reviews.map((review) => (
+                    <div key={review.id} className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex items-center gap-4">
+                          {review.avatar ? (
+                            <img 
+                              src={review.avatar} 
+                              alt={review.userName} 
+                              className="w-12 h-12 rounded-full object-cover border-2 border-white/10"
+                            />
+                          ) : (
+                            <div className="w-12 h-12 rounded-full bg-neon-accent/20 flex items-center justify-center text-neon-accent font-bold">
+                              {review.userName.charAt(0)}
+                            </div>
+                          )}
+                          <div>
+                            <p className="text-white font-semibold">{review.userName}</p>
+                            <p className="text-sm text-gray-500">{review.date}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              className={`w-4 h-4 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`} 
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-gray-300">{review.text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Review Form */}
+            <div>
+              <div className="bg-black/30 rounded-2xl p-6 md:p-8 border border-white/5 shadow-inner">
+                <h4 className="text-xl font-semibold text-white mb-6">Write a Review</h4>
+                {user ? (
+                  <form onSubmit={handleSubmitReview} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-400 mb-2">Rating</label>
+                      <div className="flex gap-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            type="button"
+                            key={star}
+                            onClick={() => setRating(star)}
+                            className="focus:outline-none"
+                          >
+                            <Star 
+                              className={`w-6 h-6 transition-colors ${star <= rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600 hover:text-yellow-400/50'}`} 
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-400 mb-2">Your Review</label>
+                      <textarea
+                        required
+                        value={newReview}
+                        onChange={(e) => setNewReview(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 focus:outline-none focus:border-neon-accent focus:ring-1 focus:ring-neon-accent transition-all min-h-[120px]"
+                        placeholder="What do you think about this product?"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="bg-neon-accent text-dark-bg px-6 py-3 rounded-xl font-bold hover:bg-neon-accent/90 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_15px_rgba(157,255,0,0.2)]"
+                    >
+                      Submit Review
+                    </button>
+                  </form>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-400 mb-4">Please log in to share your thoughts.</p>
+                    <button 
+                      onClick={() => navigate('/login')}
+                      className="bg-white/10 text-white px-6 py-2 rounded-xl font-medium hover:bg-white/20 transition-colors"
+                    >
+                      Login to Review
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

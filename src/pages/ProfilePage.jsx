@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { User, Mail, Shield, Settings, LogOut, ArrowLeft } from 'lucide-react';
+import { Navigate, useNavigate, Link } from 'react-router-dom';
+import { User, Mail, Shield, Settings, LogOut, ArrowLeft, Star, MessageSquare } from 'lucide-react';
+import { products } from '../data/products';
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
@@ -11,6 +12,30 @@ export default function ProfilePage() {
   if (!user) {
     return <Navigate to="/login" />;
   }
+
+  const [userReviews, setUserReviews] = useState([]);
+
+  useEffect(() => {
+    if (user) {
+      const allReviews = [];
+      // Loop through all products to find reviews left by this user
+      products.forEach(product => {
+        const productReviewsStr = localStorage.getItem(`reviews_${product.id}`);
+        if (productReviewsStr) {
+          try {
+            const productReviews = JSON.parse(productReviewsStr);
+            const userSpecific = productReviews.filter(r => r.userName === user.name);
+            userSpecific.forEach(r => {
+              allReviews.push({ ...r, product });
+            });
+          } catch (e) {
+            // ignore JSON parse error
+          }
+        }
+      });
+      setUserReviews(allReviews);
+    }
+  }, [user]);
 
   return (
     <div className="flex-1 py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -91,6 +116,50 @@ export default function ProfilePage() {
               <p className="text-gray-400">
                 Notification preferences and account settings will be available here soon.
               </p>
+            </div>
+
+            <div className="glass-panel p-8 rounded-3xl">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <MessageSquare className="h-5 w-5 text-neon-accent" />
+                My Reviews & Ratings
+              </h3>
+              
+              {userReviews.length === 0 ? (
+                <div className="text-gray-400">
+                  <p className="mb-4">You haven't reviewed any products yet.</p>
+                  <button 
+                    onClick={() => navigate('/')}
+                    className="text-neon-accent hover:underline"
+                  >
+                    Browse products to leave a review
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {userReviews.map((review) => (
+                    <div key={review.id} className="bg-dark-bg/50 border border-white/10 p-5 rounded-2xl">
+                      <div className="flex justify-between items-start mb-2">
+                        <Link 
+                          to={`/product/${review.product.id}`}
+                          className="text-white font-semibold hover:text-neon-accent transition-colors"
+                        >
+                          {review.product.name}
+                        </Link>
+                        <div className="flex gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              className={`w-3.5 h-3.5 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`} 
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 mb-3">{review.date}</p>
+                      <p className="text-gray-300 text-sm">{review.text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
