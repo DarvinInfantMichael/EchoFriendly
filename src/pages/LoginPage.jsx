@@ -38,13 +38,13 @@ export default function LoginPage() {
           <div className="text-center mb-10 relative">
             <button 
               onClick={() => navigate(-1)}
-              className="absolute left-0 top-0 text-gray-400 hover:text-white p-1 transition-colors group"
+              className="absolute left-0 top-0 text-app-text-muted hover:text-app-text p-1 transition-colors group"
               title="Go Back"
             >
               <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
             </button>
-            <h2 className="text-3xl font-bold tracking-tight text-white mb-2">Welcome Back</h2>
-            <p className="text-gray-400">Sign in to your Earthly account</p>
+            <h2 className="text-3xl font-bold tracking-tight text-app-text mb-2">Welcome Back</h2>
+            <p className="text-app-text-muted">Sign in to your Earthly account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -55,7 +55,7 @@ export default function LoginPage() {
             )}
             
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300 ml-1">Email Address</label>
+              <label className="text-sm font-medium text-app-text-muted ml-1">Email Address</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Mail className="h-5 w-5 text-gray-500" />
@@ -64,7 +64,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-11 pr-4 py-3 bg-dark-bg/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-eco-500 focus:border-transparent transition-all"
+                  className="block w-full pl-11 pr-4 py-3 bg-dark-bg/50 border border-app-border rounded-xl text-app-text placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-eco-500 focus:border-transparent transition-all"
                   placeholder="you@example.com"
                 />
               </div>
@@ -72,7 +72,7 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <div className="flex justify-between items-center ml-1">
-                <label className="text-sm font-medium text-gray-300">Password</label>
+                <label className="text-sm font-medium text-app-text-muted">Password</label>
                 <a href="#" className="text-xs text-eco-400 hover:text-eco-300 transition-colors">Forgot password?</a>
               </div>
               <div className="relative">
@@ -83,7 +83,7 @@ export default function LoginPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-11 pr-4 py-3 bg-dark-bg/50 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-eco-500 focus:border-transparent transition-all"
+                  className="block w-full pl-11 pr-4 py-3 bg-dark-bg/50 border border-app-border rounded-xl text-app-text placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-eco-500 focus:border-transparent transition-all"
                   placeholder="••••••••"
                 />
               </div>
@@ -91,17 +91,17 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-eco-600 hover:bg-eco-500 text-white rounded-xl font-medium transition-all hover-lift"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-eco-600 hover:bg-eco-500 text-app-text rounded-xl font-medium transition-all hover-lift"
             >
               <LogIn className="h-5 w-5" />
               Sign In
             </button>
           </form>
 
-          <div className="mt-8 pt-8 border-t border-white/10 text-center">
-            <p className="text-gray-400">
+          <div className="mt-8 pt-8 border-t border-app-border text-center">
+            <p className="text-app-text-muted">
               Don't have an account?{' '}
-              <Link to="/register" className="text-white hover:text-eco-400 font-medium inline-flex items-center gap-1 transition-colors">
+              <Link to="/register" className="text-app-text hover:text-eco-400 font-medium inline-flex items-center gap-1 transition-colors">
                 Create one <ArrowRight className="h-4 w-4" />
               </Link>
             </p>

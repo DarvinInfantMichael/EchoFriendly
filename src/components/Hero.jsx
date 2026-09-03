@@ -1,6 +1,7 @@
 import React from 'react';
 import heroBg from '../assets/hero_bg_dark_1787508920575.png';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Hero() {
   return (
@@ -20,19 +21,19 @@ export default function Hero() {
             <span className="flex h-2 w-2 rounded-full bg-neon-accent mr-2 animate-pulse"></span>
             New arrivals available now
           </div>
-          <h1 className="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl drop-shadow-md">
+          <h1 className="text-4xl tracking-tight font-extrabold text-app-text sm:text-5xl md:text-6xl drop-shadow-md">
             <span className="block">Sustainable living</span>{' '}
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-eco-400 to-neon-accent">made beautiful.</span>
           </h1>
-          <p className="mt-3 text-base text-gray-300 sm:mt-5 sm:text-lg md:mt-5 md:text-xl drop-shadow-sm">
+          <p className="mt-3 text-base text-app-text-muted sm:mt-5 sm:text-lg md:mt-5 md:text-xl drop-shadow-sm">
             Discover our curated collection of premium, eco-friendly essentials designed to seamlessly integrate sustainability into your everyday life.
           </p>
           <div className="mt-8 sm:flex sm:justify-start">
             <div className="rounded-md shadow-lg shadow-neon-accent/20">
-              <a href="#shop" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-dark-bg bg-neon-accent hover:bg-white hover:scale-105 transition-all md:py-4 md:text-lg md:px-10 group">
+              <Link to="/shop" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full bg-gradient-to-r from-pink-500 to-orange-500 text-white border-transparent hover:bg-white hover:scale-105 transition-all md:py-4 md:text-lg md:px-10 group">
                 Shop Collection
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>

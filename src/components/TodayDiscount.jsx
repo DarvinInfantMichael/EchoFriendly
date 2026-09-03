@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Tag, Clock, ArrowRight, ShoppingCart } from 'lucide-react';
+import { Tag, Clock, ArrowRight, ShoppingCart, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export default function TodayDiscount({ product, onAddToCart }) {
+export default function TodayDiscount({ product, onAddToCart, favorites, onToggleFavorite }) {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -35,6 +35,8 @@ export default function TodayDiscount({ product, onAddToCart }) {
 
   if (!product) return null;
 
+  const isFavorite = favorites?.some(f => f.id === product.id);
+
   const discountPercentage = 30;
   const discountedPrice = (product.price * (1 - discountPercentage / 100)).toFixed(2);
 
@@ -56,7 +58,7 @@ export default function TodayDiscount({ product, onAddToCart }) {
                   alt={product.name} 
                   className="w-full h-full object-cover transform group-hover:scale-105 transition duration-700"
                 />
-                <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-lg shadow-red-500/30">
+                <div className="absolute top-4 left-4 bg-red-500 text-app-text text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-lg shadow-red-500/30">
                   <Tag className="w-3 h-3" />
                   {discountPercentage}% OFF
                 </div>
@@ -65,16 +67,24 @@ export default function TodayDiscount({ product, onAddToCart }) {
 
             {/* Content side */}
             <div className="w-full lg:w-1/2 flex flex-col items-start text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon-accent/10 text-neon-accent text-sm font-medium mb-6 border border-neon-accent/20">
-                <Clock className="w-4 h-4" />
-                Deal of the Day
+              <div className="flex items-center gap-4 mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon-accent/10 text-neon-accent text-sm font-medium border border-neon-accent/20">
+                  <Clock className="w-4 h-4" />
+                  Deal of the Day
+                </div>
+                <button 
+                  onClick={() => onToggleFavorite(product)}
+                  className="p-2 rounded-full bg-app-surface hover:bg-app-surface-hover transition-colors border border-app-border"
+                >
+                  <Heart className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-app-text-muted'}`} />
+                </button>
               </div>
               
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-app-text mb-4">
                 {product.name}
               </h2>
               
-              <p className="text-gray-400 text-lg mb-8 line-clamp-3">
+              <p className="text-app-text-muted text-lg mb-8 line-clamp-3">
                 {product.description}
               </p>
 
@@ -89,17 +99,17 @@ export default function TodayDiscount({ product, onAddToCart }) {
               {/* Timer */}
               <div className="flex items-center gap-4 mb-10">
                 <div className="flex flex-col items-center p-3 glass-panel rounded-xl min-w-[70px]">
-                  <span className="text-2xl font-bold text-white">{String(timeLeft.hours).padStart(2, '0')}</span>
+                  <span className="text-2xl font-bold text-app-text">{String(timeLeft.hours).padStart(2, '0')}</span>
                   <span className="text-xs text-gray-500 uppercase">Hours</span>
                 </div>
                 <span className="text-2xl font-bold text-gray-600">:</span>
                 <div className="flex flex-col items-center p-3 glass-panel rounded-xl min-w-[70px]">
-                  <span className="text-2xl font-bold text-white">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                  <span className="text-2xl font-bold text-app-text">{String(timeLeft.minutes).padStart(2, '0')}</span>
                   <span className="text-xs text-gray-500 uppercase">Mins</span>
                 </div>
                 <span className="text-2xl font-bold text-gray-600">:</span>
                 <div className="flex flex-col items-center p-3 glass-panel rounded-xl min-w-[70px]">
-                  <span className="text-2xl font-bold text-white">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                  <span className="text-2xl font-bold text-app-text">{String(timeLeft.seconds).padStart(2, '0')}</span>
                   <span className="text-xs text-gray-500 uppercase">Secs</span>
                 </div>
               </div>
@@ -107,14 +117,14 @@ export default function TodayDiscount({ product, onAddToCart }) {
               <div className="flex flex-wrap gap-4 w-full">
                 <button 
                   onClick={() => onAddToCart({ ...product, price: parseFloat(discountedPrice) })}
-                  className="flex-1 flex items-center justify-center gap-2 bg-neon-accent hover:bg-neon-accent/90 text-dark-bg font-bold py-4 px-8 rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(205,255,100,0.4)] hover-lift"
+                  className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-orange-500 text-white border-transparent hover:from-pink-600 hover:to-orange-600 font-bold py-4 px-8 rounded-xl transition-all duration-300 hover:shadow-[0_0_20px_rgba(205,255,100,0.4)] hover-lift"
                 >
                   <ShoppingCart className="w-5 h-5" />
                   Add to Cart
                 </button>
                 <Link 
                   to={`/product/${product.id}`}
-                  className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white font-medium py-4 px-8 rounded-xl border border-white/10 transition-all duration-300 hover-lift"
+                  className="flex items-center justify-center gap-2 bg-app-surface hover:bg-app-surface-hover text-app-text font-medium py-4 px-8 rounded-xl border border-app-border transition-all duration-300 hover-lift"
                 >
                   View Details
                   <ArrowRight className="w-4 h-4" />

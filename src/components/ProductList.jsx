@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ProductCard from './ProductCard';
 import { useAuth } from '../context/AuthContext';
+import { Grid, Heart, Home, Navigation, Sparkles, Palette, Shirt, Gem } from 'lucide-react';
 
-export default function ProductList({ products, onAddToCart }) {
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [priceBucket, setPriceBucket] = useState('All');
+const categoryIcons = {
+  'All': <Grid className="w-4 h-4" />,
+  'Personal Care': <Heart className="w-4 h-4" />,
+  'Home & Kitchen': <Home className="w-4 h-4" />,
+  'On the Go': <Navigation className="w-4 h-4" />,
+  'Beauty': <Sparkles className="w-4 h-4" />,
+  'Handmade': <Palette className="w-4 h-4" />,
+  'Clothing': <Shirt className="w-4 h-4" />,
+  'Accessories': <Gem className="w-4 h-4" />
+};
+
+export default function ProductList({ products, onAddToCart, favorites, onToggleFavorite, activeCategory = 'All', setActiveCategory, priceBucket = 'All', setPriceBucket }) {
   const { user } = useAuth();
-
+  
   const categories = ['All', ...new Set(products.map(p => p.category))];
   const priceBuckets = ['All', 'Under $25', '$25 - $50', '$50 - $100', 'Over $100'];
 
@@ -29,64 +39,42 @@ export default function ProductList({ products, onAddToCart }) {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+          <h2 className="text-3xl font-extrabold text-app-text sm:text-4xl">
             Our Sustainable Selection
           </h2>
-          <p className="mt-4 max-w-2xl text-xl text-gray-400 mx-auto">
+          <p className="mt-4 max-w-2xl text-xl text-app-text-muted mx-auto">
             Carefully crafted products that are gentle on the earth and beautiful in your home.
           </p>
         </div>
         
-        {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-6">
-          {categories.map(category => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                activeCategory === category
-                  ? 'bg-eco-500 text-white shadow-lg shadow-eco-500/30'
-                  : 'bg-dark-surface text-gray-400 hover:text-white border border-dark-border hover:border-eco-500/50'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
-        {/* Price Range Filter - Only visible if logged in */}
-        {user && (
-          <div className="flex flex-wrap justify-center items-center gap-3 mb-12">
-            <span className="text-sm font-medium text-gray-500 mr-2 uppercase tracking-wider">Price:</span>
-            {priceBuckets.map(bucket => (
-              <button
-                key={bucket}
-                onClick={() => setPriceBucket(bucket)}
-                className={`px-5 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                  priceBucket === bucket
-                    ? 'bg-neon-accent text-dark-bg shadow-lg shadow-neon-accent/30 font-bold'
-                    : 'bg-transparent text-gray-400 hover:text-white border border-dark-border hover:border-neon-accent/50'
-                }`}
-              >
-                {bucket}
-              </button>
-            ))}
-          </div>
-        )}
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredProducts.map((product) => (
             <ProductCard 
               key={product.id} 
               product={product} 
               onAddToCart={onAddToCart} 
+              isFavorite={favorites?.some(f => f.id === product.id)}
+              onToggleFavorite={onToggleFavorite}
             />
           ))}
         </div>
         
         {filteredProducts.length === 0 && (
-          <div className="text-center text-gray-500 mt-12">
-            No products found matching your criteria.
+          <div className="flex flex-col items-center justify-center p-12 bg-dark-surface/30 rounded-2xl border border-dark-border text-center mt-6">
+            <span className="text-4xl mb-4">🔍</span>
+            <h3 className="text-xl font-bold text-app-text mb-2">No products found</h3>
+            <p className="text-app-text-muted">
+              We couldn't find any products matching your current filters.
+            </p>
+            <button 
+              onClick={() => {
+                if (setActiveCategory) setActiveCategory('All');
+                if (setPriceBucket) setPriceBucket('All');
+              }}
+              className="mt-6 px-6 py-2 bg-dark-surface hover:bg-dark-border text-app-text rounded-full transition-colors border border-dark-border"
+            >
+              Clear Filters
+            </button>
           </div>
         )}
       </div>

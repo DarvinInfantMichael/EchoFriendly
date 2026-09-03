@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+:root {
+  /* Vibrant Rainforest Light Theme */
+  --app-bg-gradient: linear-gradient(135deg, #ccfbf1 0%, #dcfce7 50%, #fdfbf7 100%);
+  --app-bg: #ccfbf1;
+  --app-surface: rgba(255, 255, 255, 0.65);
+  --app-surface-hover: rgba(255, 255, 255, 0.9);
+  --app-border: rgba(20, 184, 166, 0.25);
+  --app-text: #0f172a;
+  --app-text-muted: #475569;
+  --app-accent: #0d9488; /* Teal 600 */
+  --app-blend: normal;
+}
+
+html.dark {
+  /* Bioluminescent Night Dark Theme */
+  --app-bg-gradient: linear-gradient(135deg, #020617 0%, #042f2e 50%, #022c22 100%);
+  --app-bg: #020617;
+  --app-surface: rgba(2, 44, 34, 0.4);
+  --app-surface-hover: rgba(2, 44, 34, 0.7);
+  --app-border: rgba(45, 212, 191, 0.15);
+  --app-text: #ccfbf1;
+  --app-text-muted: #94a3b8;
+  --app-accent: #2dd4bf; /* Teal 400 */
+  --app-blend: lighten;
+}
+
 @theme {
   --color-eco-50: #f2fcf5;
   --color-eco-100: #e1f8e8;
@@ -13,26 +39,47 @@
   --color-eco-900: #19462d;
   --color-eco-950: #0e271a;
   
-  --color-dark-bg: #090e11;
-  --color-dark-surface: rgba(20, 30, 25, 0.6);
-  --color-dark-border: rgba(95, 198, 134, 0.2);
-  --color-neon-accent: #39ff14;
+  --color-app-bg: var(--app-bg);
+  --color-app-surface: var(--app-surface);
+  --color-app-surface-hover: var(--app-surface-hover);
+  --color-app-border: var(--app-border);
+  --color-app-text: var(--app-text);
+  --color-app-text-muted: var(--app-text-muted);
+  --color-app-accent: var(--app-accent);
+
+  /* Legacy mappings */
+  --color-dark-bg: var(--app-bg);
+  --color-dark-surface: var(--app-surface);
+  --color-dark-border: var(--app-border);
+  --color-neon-accent: var(--app-accent);
 
   --font-sans: 'Inter', 'Outfit', system-ui, sans-serif;
 }
 
 @layer base {
   body {
-    @apply bg-dark-bg text-gray-100 font-sans antialiased selection:bg-eco-500 selection:text-white;
+    background-image: var(--app-bg-gradient);
+    background-attachment: fixed;
+    @apply text-app-text font-sans antialiased selection:bg-eco-500 selection:text-white min-h-screen;
   }
 }
 
 @layer utilities {
   .hover-lift {
-    @apply transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-eco-500/20;
+    @apply transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-app-accent/20;
   }
   
   .glass-panel {
-    @apply bg-dark-surface backdrop-blur-xl border border-dark-border shadow-lg;
+    @apply bg-app-surface backdrop-blur-xl border border-app-border shadow-[0_8px_32px_rgba(0,0,0,0.05)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)];
+  }
+
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
+@keyframes slideInLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } } .animate-slide-in-left { animation: slideInLeft 0.3s ease-out forwards; }
