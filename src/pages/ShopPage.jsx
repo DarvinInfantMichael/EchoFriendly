@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useProducts } from '../context/ProductContext';
 import { Menu, X, Grid, Heart, Home, Navigation as NavIcon, Sparkles, Palette, Shirt, Gem } from 'lucide-react';
 import TodayDiscount from '../components/TodayDiscount';
 import SpecialOffersCarousel from '../components/SpecialOffersCarousel';
 import ProductList from '../components/ProductList';
-import { products } from '../data/products';
 
 const categoryIcons = {
   'All': <Grid className="w-4 h-4" />,
@@ -22,6 +22,7 @@ export default function ShopPage({ onAddToCart, favorites, onToggleFavorite }) {
   const [priceBucket, setPriceBucket] = useState('All');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { user } = useAuth();
+  const { products, loading, error } = useProducts();
   
   // Prevent scrolling when drawer is open
   useEffect(() => {
@@ -47,6 +48,22 @@ export default function ShopPage({ onAddToCart, favorites, onToggleFavorite }) {
   
   // Feature a different product every day based on the day of the year
   const dealOfTheDay = products[dayOfYear % products.length] || products[0];
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-dark-bg">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-eco-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-dark-bg text-red-500">
+        Error loading products: {error}
+      </div>
+    );
+  }
 
   return (
     <div className="w-full bg-dark-bg">

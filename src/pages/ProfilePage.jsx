@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Navigate, useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Shield, Settings, LogOut, ArrowLeft, Star, MessageSquare } from 'lucide-react';
-import { products } from '../data/products';
+import { useProducts } from '../context/ProductContext';
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
@@ -13,6 +13,7 @@ export default function ProfilePage() {
     return <Navigate to="/login" />;
   }
 
+  const { products } = useProducts();
   const [userReviews, setUserReviews] = useState([]);
 
   useEffect(() => {
@@ -45,11 +46,11 @@ export default function ProfilePage() {
 
       <div className="max-w-4xl mx-auto z-10 relative">
         <button 
-          onClick={() => navigate(-1)}
-          className="text-app-text-muted hover:text-app-text flex items-center gap-2 mb-6 transition-colors group"
+          onClick={() => navigate('/')}
+          className="bg-gradient-to-r from-pink-500 to-orange-500 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 mb-8 shadow-md hover:shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all transform hover:-translate-y-0.5 active:scale-95 group w-max"
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          Go Back
+          Back to Shop
         </button>
         
         <div className="mb-8">

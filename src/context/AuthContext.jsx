@@ -27,34 +27,53 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
-  // Mock login function
-  const login = (email, password) => {
-    // In a real app, this would be an API call
-    if (email && password) {
-      setUser({
-        name: email.split('@')[0],
-        email: email
+  // Register function using backend API
+  const register = async (name, email, password) => {
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, password })
       });
-      return true;
+      const data = await response.json();
+      if (response.ok) {
+        setUser({ ...data.user, token: data.token });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Registration failed:', error);
+      return false;
     }
-    return false;
   };
 
-  // Mock register function
-  const register = (name, email, password) => {
-    // In a real app, this would be an API call
-    if (name && email && password) {
-      setUser({
-        name: name,
-        email: email
+  // Login function using backend API
+  const login = async (email, password) => {
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
       });
-      return true;
+      const data = await response.json();
+      if (response.ok) {
+        setUser({ ...data.user, token: data.token });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem('earthly_user');
   };
 
   const value = {

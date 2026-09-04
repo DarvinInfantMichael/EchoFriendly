@@ -10,7 +10,7 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
@@ -19,9 +19,9 @@ export default function LoginPage() {
       return;
     }
 
-    const success = login(email, password);
+    const success = await login(email, password);
     if (success) {
-      navigate('/profile');
+      navigate('/');
     } else {
       setError('Invalid email or password');
     }

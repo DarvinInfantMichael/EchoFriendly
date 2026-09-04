@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Leaf, Droplet, Wind, ArrowRight, ArrowLeft, Star, Heart, Truck, Package, RefreshCcw, CheckCircle } from 'lucide-react';
-import { products } from '../data/products';
 import { useAuth } from '../context/AuthContext';
+import { useProducts } from '../context/ProductContext';
 import ProductCard from '../components/ProductCard';
 
 export default function ProductDetailsPage({ onAddToCart, favorites, onToggleFavorite }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { products, loading, error } = useProducts();
   
-  const product = products.find((p) => p.id === parseInt(id));
+  // Use string comparison since MongoDB IDs are strings
+  const product = products.find((p) => String(p.id) === String(id));
 
   const defaultReviews = [
     {
@@ -48,8 +50,8 @@ export default function ProductDetailsPage({ onAddToCart, favorites, onToggleFav
   const [quantity, setQuantity] = useState(1);
   const [activeThumbnail, setActiveThumbnail] = useState(0);
   
-  const sizes = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
-  const disabledSizes = ['L', 'XXXL']; // Mock out of stock sizes
+  const sizes = product?.sizes || [];
+  const disabledSizes = []; // Mock out of stock sizes
 
   useEffect(() => {
     localStorage.setItem(`reviews_${id}`, JSON.stringify(reviews));
@@ -106,7 +108,15 @@ export default function ProductDetailsPage({ onAddToCart, favorites, onToggleFav
     .filter(Boolean)
     .slice(0, 4); // Show max 4 items
 
-  if (!product) {
+  if (loading) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center py-32">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-eco-500"></div>
+      </div>
+    );
+  }
+
+  if (error || !product) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center py-32">
         <h2 className="text-3xl font-bold text-app-text mb-4">Product Not Found</h2>
@@ -204,30 +214,32 @@ export default function ProductDetailsPage({ onAddToCart, favorites, onToggleFav
             </div>
             
             {/* Size Selector */}
-            <div className="mb-8">
-              <span className="block text-sm font-bold text-app-text mb-3">size:</span>
-              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                {sizes.map(size => {
-                  const isOutOfStock = disabledSizes.includes(size);
-                  return (
-                    <button
-                      key={size}
-                      disabled={isOutOfStock}
-                      onClick={() => setSelectedSize(size)}
-                      className={`py-3 rounded-lg text-sm font-bold transition-all border ${
-                        isOutOfStock 
-                          ? 'bg-app-surface text-gray-600 border-app-border cursor-not-allowed line-through' 
-                          : selectedSize === size
-                            ? 'bg-white text-dark-bg border-white shadow-[0_0_15px_rgba(255,255,255,0.2)]'
-                            : 'bg-transparent text-app-text border-app-border hover:border-white'
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  );
-                })}
+            {sizes.length > 0 && (
+              <div className="mb-8">
+                <span className="block text-sm font-bold text-app-text mb-3">size:</span>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                  {sizes.map(size => {
+                    const isOutOfStock = disabledSizes.includes(size);
+                    return (
+                      <button
+                        key={size}
+                        disabled={isOutOfStock}
+                        onClick={() => setSelectedSize(size)}
+                        className={`py-3 rounded-lg text-sm font-bold transition-all border ${
+                          isOutOfStock 
+                            ? 'bg-app-surface text-gray-600 border-app-border cursor-not-allowed line-through' 
+                            : selectedSize === size
+                              ? 'bg-white text-dark-bg border-white shadow-[0_0_15px_rgba(255,255,255,0.2)]'
+                              : 'bg-transparent text-app-text border-app-border hover:border-white'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Quantity and Actions */}
             <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 mb-10 border-b border-app-border pb-10">
@@ -250,14 +262,17 @@ export default function ProductDetailsPage({ onAddToCart, favorites, onToggleFav
 
               {/* Add to Cart Button */}
               <button 
-                onClick={() => selectedSize && onAddToCart({ ...product, quantity, size: selectedSize })}
+                onClick={() => {
+                  if (sizes.length > 0 && !selectedSize) return;
+                  onAddToCart({ ...product, quantity, ...(selectedSize ? { size: selectedSize } : {}) });
+                }}
                 className={`flex-1 h-14 rounded-lg font-extrabold text-sm tracking-wider uppercase transition-all ${
-                  selectedSize 
+                  (sizes.length === 0 || selectedSize) 
                     ? 'bg-white text-black hover:bg-gray-200' 
                     : 'bg-app-bg text-app-text border border-app-border hover:bg-app-surface'
                 }`}
               >
-                {selectedSize ? `Add to Cart` : 'SELECT THE OPTIONS ABOVE'}
+                {(sizes.length === 0 || selectedSize) ? `Add to Cart` : 'SELECT THE OPTIONS ABOVE'}
               </button>
               
               {/* Favorite Button */}
