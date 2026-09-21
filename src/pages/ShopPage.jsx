@@ -5,6 +5,7 @@ import { Menu, X, Grid, Heart, Home, Navigation as NavIcon, Sparkles, Palette, S
 import TodayDiscount from '../components/TodayDiscount';
 import SpecialOffersCarousel from '../components/SpecialOffersCarousel';
 import ProductList from '../components/ProductList';
+import BigBillionDaysPromo from '../components/BigBillionDaysPromo';
 
 const categoryIcons = {
   'All': <Grid className="w-4 h-4" />,
@@ -200,8 +201,8 @@ export default function ShopPage({ onAddToCart, favorites, onToggleFavorite }) {
 
       <div className="pt-8">
         <SpecialOffersCarousel
-          title={<>Special <span className="text-neon-accent">Offers</span></>}
-          subtitle="Discover premium eco-friendly picks for you."
+          title={<>Explore <span className="text-neon-accent">Categories</span></>}
+          subtitle="Discover a unique product from each of our eco-friendly categories."
           products={products}
           onAddToCart={onAddToCart}
           favorites={favorites}
@@ -211,15 +212,16 @@ export default function ShopPage({ onAddToCart, favorites, onToggleFavorite }) {
 
       <div className="py-12 text-center relative">
         <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-neon-accent/10 to-transparent pointer-events-none" />
-        <div className="mb-6 inline-block px-6 py-2 rounded-full bg-red-500/20 border border-red-500/30 text-red-400 font-bold tracking-wide animate-pulse relative z-10 shadow-[0_0_15px_rgba(239,68,68,0.3)]">
-          🎉 SEASON SALE: 20% OFF EVERYTHING! 🎉
-        </div>
         <h1 className="text-4xl tracking-tight font-extrabold text-app-text sm:text-5xl md:text-6xl relative z-10">
           Shop Our <span className="text-neon-accent">Collection</span>
         </h1>
         <p className="mt-3 text-base text-app-text-muted sm:mt-5 sm:text-lg max-w-2xl mx-auto relative z-10">
           Every product is a step towards a greener, cleaner Earth. Find your favorites below.
         </p>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <BigBillionDaysPromo />
       </div>
       
       <TodayDiscount product={dealOfTheDay} onAddToCart={onAddToCart} favorites={favorites} onToggleFavorite={onToggleFavorite} />

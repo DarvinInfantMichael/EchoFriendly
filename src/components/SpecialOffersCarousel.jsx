@@ -5,13 +5,14 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 export default function SpecialOffersCarousel({ title, subtitle, products, category, onAddToCart, favorites, onToggleFavorite }) {
   const carouselRef = useRef(null);
 
-  // Filter products by category and perhaps those on sale
-  const specialProducts = products.filter(p => p.category === category || p.isSale);
-  // Pick a subset or just a specific category. Let's prioritize the specific category
-  const categoryProducts = products.filter(p => p.category === category);
-  
-  // Use category products, if not enough use sale products
-  const displayProducts = categoryProducts.length > 0 ? categoryProducts : specialProducts.slice(0, 8);
+  // Get one product from each category
+  const categoryMap = new Map();
+  products.forEach(p => {
+    if (p.category && !categoryMap.has(p.category)) {
+      categoryMap.set(p.category, p);
+    }
+  });
+  const displayProducts = Array.from(categoryMap.values());
 
   if (displayProducts.length === 0) return null;
 
